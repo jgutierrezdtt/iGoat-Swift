@@ -3,10 +3,10 @@ name: Scan CocoaPods Dependencies
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   dependency-scan:
@@ -27,6 +27,7 @@ jobs:
 
     - name: Install project dependencies
       run: |
+        cd iGoat-Swift # Cambia al directorio donde se encuentra tu Podfile
         pod install
 
     - name: Install Syft
@@ -35,10 +36,11 @@ jobs:
 
     - name: Scan dependencies with Syft
       run: |
-        syft iGoat-Swift/podfile.lock -o json > podfile-lock-scan.json
+        cd iGoat-Swift # Asegúrate de estar en la carpeta correcta
+        syft podfile.lock -o json > podfile-lock-scan.json
 
     - name: Upload Syft Scan Results
       uses: actions/upload-artifact@v2
       with:
         name: syft-results
-        path: podfile-lock-scan.json
+        path: iGoat-Swift/podfile-lock-scan.json
