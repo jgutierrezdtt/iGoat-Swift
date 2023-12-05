@@ -32,7 +32,7 @@ jobs:
     - name: Scan dependencies with Syft
       run: |
         cd iGoat-Swift
-        syft -o json > podfile-lock-scan.json
+        syft . -o json > podfile-lock-scan.json
 
     - name: Upload Syft Scan Results
       uses: actions/upload-artifact@v2
