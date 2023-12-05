@@ -1,0 +1,44 @@
+name: Scan CocoaPods Dependencies
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  dependency-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '2.7' # Asegúrate de usar la versión de Ruby adecuada para tu proyecto
+
+    - name: Install CocoaPods
+      run: |
+        gem install cocoapods
+
+    - name: Install project dependencies
+      run: |
+        pod install
+
+    - name: Install Syft
+      run: |
+        curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+
+    - name: Scan dependencies with Syft
+      run: |
+        syft iGoat-Swift/podfile.lock -o json > podfile-lock-scan.json
+
+    - name: Upload Syft Scan Results
+      uses: actions/upload-artifact@v2
+      with:
+        name: syft-results
+        path: podfile-lock-scan.json
