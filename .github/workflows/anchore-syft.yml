@@ -25,12 +25,6 @@ jobs:
       run: |
         gem install cocoapods
 
-    - name: Install project dependencies
-      run: |
-        cd iGoat-Swift
-        echo "platform :ios, '13.0'" >> Podfile # Ajusta la versión de iOS según tu proyecto
-        pod install
-
     - name: Install Syft
       run: |
         curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
