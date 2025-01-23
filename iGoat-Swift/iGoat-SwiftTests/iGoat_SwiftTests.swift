@@ -21,9 +21,19 @@ class iGoat_SwiftTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testStrtollConversion() {
+        let validString = "12345"
+        let invalidString = "abc123"
+        
+        // Test valid conversion
+        var endptr: UnsafeMutablePointer<Int8>? = nil
+        let validResult = strtoll(validString, &endptr, 10)
+        XCTAssertEqual(validResult, 12345, "Valid conversion failed")
+        
+        // Test invalid conversion
+        let invalidResult = strtoll(invalidString, &endptr, 10)
+        XCTAssertEqual(invalidResult, 0, "Invalid conversion did not return 0")
+        XCTAssertNotEqual(endptr?.pointee, 0, "End pointer should not be null for invalid conversion")
     }
     
     func testPerformanceExample() {

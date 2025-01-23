@@ -163,7 +163,13 @@ static int _captureLogLevel = LOG_LEVEL_VERBOSE;
                                              [DDASLLogCapture aslMessageRecieved:msg];
                                              
                                              // Keep track of which messages we've seen.
-                                             lastSeenID = atoll(asl_get(msg, ASL_KEY_MSG_ID));
+                                            char *endptr;
+                                            lastSeenID = strtoll(asl_get(msg, ASL_KEY_MSG_ID), &endptr, 10);
+                                            if (*endptr != '\0') {
+                                                // Handle the error: conversion failed
+                                                NSLog(@"Conversion error: invalid message ID");
+                                                lastSeenID = 0; // or handle it in a way that makes sense for your application
+                                            }
                                          }
                                          asl_release(response);
                                          
